@@ -53,6 +53,15 @@ class Api::V1::UsersController < ApplicationController
     render json: { message: 'An Error Occurred' }, status: :unprocessable_entity
   end
 
+  def toggle_private_file
+    f = FileList.find(params[:id])
+    if current_user == f.user
+      f.update(private: !f.private)
+    else
+      render json: { message: 'Not Authorized' }, status: :unauthorized
+    end
+  end
+
   private
 
   def parsed_params

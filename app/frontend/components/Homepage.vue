@@ -78,6 +78,21 @@ const copyFile = (id) => {
     })
 }
 
+const togglePrivateFile = (id) => {
+  api({
+    method: 'POST',
+    url: '/api/v1/toggle_private_file',
+    data: { id: id }
+  })
+    .then(() => {
+      notifications.set('File Permission Successfully Changed', 'success')
+      checkUser()
+    })
+    .catch(() => {
+      notifications.set('An Error Ouccured', 'error')
+    })
+}
+
 const logoutUser = () => {
   api({
     method: 'DELETE',
@@ -202,7 +217,15 @@ const logoutUser = () => {
                   </a>
                 </td>
                 <td>{{ file.size }}</td>
-                <td>{{ file.private }}</td>
+                <td>
+                  {{ file.private }}<br />
+                  <button
+                    @click="togglePrivateFile(file.id)"
+                    class="text-blue-500"
+                  >
+                    Change to {{ file.private == 'Yes' ? 'Public' : 'Private' }}
+                  </button>
+                </td>
                 <td>{{ file.created_at }}</td>
                 <td>{{ file.uploaded_by }}</td>
                 <td class="py-2">

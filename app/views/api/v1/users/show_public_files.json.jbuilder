@@ -1,5 +1,5 @@
 json.files(@files) do |f|
-  json.id f.file.id
+  json.id f.id
   json.name f.file.filename
   json.private yes_no(f.private)
   json.uploaded_by f.user.email
