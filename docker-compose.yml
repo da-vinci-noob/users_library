@@ -11,7 +11,7 @@ services:
       POSTGRES_USER: postgres
   web:
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && rails s -p 3000 -b 0.0.0.0"
+    command: bash -c "rm -f tmp/pids/server.pid && yarn install && ./bin/dev"
     volumes:
       - .:/myapp
     ports:
@@ -22,3 +22,4 @@ services:
       DB_HOST: pg_database
       DB_PASSWORD: admin
       DB_USER: postgres
+    tty: true # for tailwind to watch changes
