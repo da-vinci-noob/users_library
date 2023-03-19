@@ -9,7 +9,9 @@ import AddFile from './addons/AddFile.vue'
 const router = useRouter()
 const notifications = useNotificationsStore()
 const user = ref({})
+const userEmail = ref(null)
 const showUploadComponent = ref(false)
+const showPublicFiles = ref(false)
 
 // Lifecycles
 onMounted(() => {
@@ -20,15 +22,59 @@ onMounted(() => {
 const checkUser = () => {
   api({
     method: 'GET',
-    url: '/api/v1/check_user'
+    url: '/api/v1/user_files'
   })
     .then((res) => {
-      // Process File Lists
-      user.value.email = res.data.email
+      user.value = res.data
+      userEmail.value = res.data.email
     })
     .catch(() => {
       notifications.set('You are not logged in', 'error')
       router.push({ path: '/login' })
+    })
+}
+
+const deleteFile = (id) => {
+  api({
+    method: 'POST',
+    url: '/api/v1/delete_file',
+    data: { id: id }
+  })
+    .then(() => {
+      checkUser()
+    })
+    .catch(() => {
+      notifications.set('An Error Ouccured', 'error')
+    })
+}
+
+const fetchPublicFiles = () => {
+  api({
+    method: 'GET',
+    url: '/api/v1/show_public_files'
+  })
+    .then((res) => {
+      user.value = res.data
+    })
+    .catch(() => {
+      notifications.set('You are not logged in', 'error')
+      router.push({ path: '/login' })
+    })
+}
+
+const copyFile = (id) => {
+  api({
+    method: 'POST',
+    url: '/api/v1/copy_file',
+    data: { id: id }
+  })
+    .then(() => {
+      notifications.set('File Successfully Copied', 'success')
+      checkUser()
+      showPublicFiles.value = false
+    })
+    .catch(() => {
+      notifications.set('An Error Ouccured', 'error')
     })
 }
 
@@ -88,7 +134,7 @@ const logoutUser = () => {
           </svg>
         </div>
         <div class="space-x-4">
-          <span class="text-gray-200">{{ user.email }}</span>
+          <span class="text-gray-200">{{ userEmail }}</span>
           <button
             @click="logoutUser"
             class="px-6 py-3 text-sm font-medium leading-none text-white bg-red-700 rounded focus:ring-2 hover:bg-red-600 focus:outline-none"
@@ -114,6 +160,17 @@ const logoutUser = () => {
                 Add New File
               </span>
             </button>
+            <button
+              @click="showPublicFiles = !showPublicFiles"
+              class="text-sm font-medium leading-none text-white bg-indigo-700 rounded whitespace-nowrap focus:ring-2 sm:ml-3 hover:bg-indigo-600"
+            >
+              <div class="px-6 py-3" v-if="showPublicFiles" @click="checkUser">
+                Show My Files
+              </div>
+              <div class="px-6 py-3" v-else @click="fetchPublicFiles">
+                Show Public Files
+              </div>
+            </button>
           </div>
         </div>
 
@@ -127,18 +184,44 @@ const logoutUser = () => {
               <tr class="">
                 <th class="py-3 pl-8 text-sm font-normal">Name</th>
                 <th class="text-sm font-normal">Size</th>
+                <th class="text-sm font-normal">Is Private</th>
                 <th class="text-sm font-normal">Uploaded Date</th>
                 <th class="text-sm font-normal">Uploaded By</th>
                 <th class="text-sm font-normal">Action</th>
               </tr>
             </thead>
             <tbody class="text-gray-200 bg-gray-700 divide-y divide-gray-500">
-              <tr v-for="(item, index) in 10" :key="index">
-                <td class="py-2 pl-8">Filanem</td>
-                <td>24 MB</td>
-                <td>Date</td>
-                <td>test@test.com</td>
-                <td>DELETE</td>
+              <tr v-for="(file, index) in user.files" :key="index">
+                <td class="pl-8">
+                  <a
+                    :href="file.url"
+                    class="hover:text-blue-600"
+                    target="_blank"
+                  >
+                    {{ file.name }}
+                  </a>
+                </td>
+                <td>{{ file.size }}</td>
+                <td>{{ file.private }}</td>
+                <td>{{ file.created_at }}</td>
+                <td>{{ file.uploaded_by }}</td>
+                <td class="py-2">
+                  <button
+                    class="px-6 py-3 text-sm font-medium leading-none text-white rounded focus:ring-2 focus:outline-none"
+                    :class="[
+                      showPublicFiles
+                        ? 'bg-indigo-700 hover:bg-indigo-600'
+                        : 'bg-red-700 hover:bg-red-600'
+                    ]"
+                  >
+                    <span v-if="showPublicFiles" @click="copyFile(file.id)">
+                      COPY
+                    </span>
+                    <span v-else @click="deleteFile(file.id)">
+                      Delete
+                    </span>
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
