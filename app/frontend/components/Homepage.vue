@@ -3,11 +3,13 @@ import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useNotificationsStore } from '@/store/notifications' // Notifications Store Import
 import api from '../plugins/axios'
+import AddFile from './addons/AddFile.vue'
 
 // Variables
 const router = useRouter()
 const notifications = useNotificationsStore()
 const user = ref({})
+const showUploadComponent = ref(false)
 
 // Lifecycles
 onMounted(() => {
@@ -96,17 +98,25 @@ const logoutUser = () => {
         </div>
       </div>
       <div class="mt-8">
-        <div class="text-right">
-          <router-link to="/add-file">
+        <div class="flex justify-between">
+          <div class="w-2/3">
+            <AddFile v-if="showUploadComponent" />
+          </div>
+          <div class="">
             <button
-              class="px-6 py-3 text-sm font-medium leading-none text-white bg-indigo-700 rounded focus:ring-2 sm:ml-3 hover:bg-indigo-600"
+              @click="showUploadComponent = !showUploadComponent"
+              class="px-6 py-3 text-sm font-medium leading-none text-white bg-indigo-700 rounded whitespace-nowrap focus:ring-2 sm:ml-3 hover:bg-indigo-600"
             >
-              <p class="">
+              <span v-if="showUploadComponent">
+                Hide Upload Component
+              </span>
+              <span v-else>
                 Add New File
-              </p>
+              </span>
             </button>
-          </router-link>
+          </div>
         </div>
+
         <div
           class="mt-2 overflow-hidden border rounded-lg dark:border-gray-700"
         >

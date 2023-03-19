@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   # API Routes
   scope :api, defaults: { format: :json } do
     scope :v1 do
+      post 'add_files', to: 'api/v1/users#add_files'
       devise_scope :user do
         get 'check_user', to: 'api/v1/users#check_user'
       end
