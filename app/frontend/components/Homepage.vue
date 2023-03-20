@@ -150,6 +150,13 @@ const logoutUser = () => {
         </div>
         <div class="space-x-4">
           <span class="text-gray-200">{{ userEmail }}</span>
+          <router-link to="/change-password">
+            <button
+              class="px-6 py-3 text-sm font-medium leading-none text-white bg-indigo-700 rounded whitespace-nowrap focus:ring-2 sm:ml-3 hover:bg-indigo-600"
+            >
+              Change Password
+            </button>
+          </router-link>
           <button
             @click="logoutUser"
             class="px-6 py-3 text-sm font-medium leading-none text-white bg-red-700 rounded focus:ring-2 hover:bg-red-600 focus:outline-none"
