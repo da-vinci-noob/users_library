@@ -21,6 +21,6 @@ Rails.application.routes.draw do
     end
   end
   root 'vue#index'
-  get '/*path', to: 'vue#index', constraints: ->(req) { (req.path =~ %r{^/active_storage/.*}) }
+  get '/*path', to: 'vue#index', constraints: ->(req) { req.path.exclude?('active_storage') }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 end
