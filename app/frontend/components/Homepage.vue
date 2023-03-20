@@ -238,6 +238,13 @@ const logoutUser = () => {
                 <td>{{ file.uploaded_by }}</td>
                 <td class="py-2">
                   <button
+                    @click="
+                      ;[
+                        showPublicFiles
+                          ? copyFile(file.id)
+                          : deleteFile(file.id)
+                      ]
+                    "
                     class="px-6 py-3 text-sm font-medium leading-none text-white rounded focus:ring-2 focus:outline-none"
                     :class="[
                       showPublicFiles
@@ -245,10 +252,10 @@ const logoutUser = () => {
                         : 'bg-red-700 hover:bg-red-600'
                     ]"
                   >
-                    <span v-if="showPublicFiles" @click="copyFile(file.id)">
+                    <span v-if="showPublicFiles">
                       COPY
                     </span>
-                    <span v-else @click="deleteFile(file.id)">
+                    <span v-else>
                       Delete
                     </span>
                   </button>
