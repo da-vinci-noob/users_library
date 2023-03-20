@@ -35,17 +35,19 @@ const checkUser = () => {
 }
 
 const deleteFile = (id) => {
-  api({
-    method: 'POST',
-    url: '/api/v1/delete_file',
-    data: { id: id }
-  })
-    .then(() => {
-      checkUser()
+  if (confirm('Do you really want to delete?')) {
+    api({
+      method: 'POST',
+      url: '/api/v1/delete_file',
+      data: { id: id }
     })
-    .catch(() => {
-      notifications.set('An Error Ouccured', 'error')
-    })
+      .then(() => {
+        checkUser()
+      })
+      .catch(() => {
+        notifications.set('An Error Ouccured', 'error')
+      })
+  }
 }
 
 const fetchPublicFiles = () => {
@@ -63,19 +65,21 @@ const fetchPublicFiles = () => {
 }
 
 const copyFile = (id) => {
-  api({
-    method: 'POST',
-    url: '/api/v1/copy_file',
-    data: { id: id }
-  })
-    .then(() => {
-      notifications.set('File Successfully Copied', 'success')
-      checkUser()
-      showPublicFiles.value = false
+  if (confirm('Copy file to your own Storage?')) {
+    api({
+      method: 'POST',
+      url: '/api/v1/copy_file',
+      data: { id: id }
     })
-    .catch(() => {
-      notifications.set('An Error Ouccured', 'error')
-    })
+      .then(() => {
+        notifications.set('File Successfully Copied', 'success')
+        checkUser()
+        showPublicFiles.value = false
+      })
+      .catch(() => {
+        notifications.set('An Error Ouccured', 'error')
+      })
+  }
 }
 
 const togglePrivateFile = (id) => {
