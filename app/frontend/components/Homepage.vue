@@ -220,6 +220,7 @@ const logoutUser = () => {
                 <td>
                   {{ file.private }}<br />
                   <button
+                    v-if="!showPublicFiles"
                     @click="togglePrivateFile(file.id)"
                     class="text-blue-500"
                   >
