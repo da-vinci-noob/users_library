@@ -8,6 +8,7 @@ const notifications = useNotificationsStore()
 const file = ref(null)
 const files = ref([])
 const is_private = ref([])
+const emit = defineEmits(['uploadSuccess'])
 
 // Functions
 const uploadFiles = () => {
@@ -31,6 +32,7 @@ const uploadFiles = () => {
       file.value = ''
       files.value = []
       is_private.value = []
+      emit('uploadSuccess')
       notifications.set(response.data.message, 'success')
     })
     .catch((error) => {

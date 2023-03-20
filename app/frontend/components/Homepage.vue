@@ -168,7 +168,7 @@ const logoutUser = () => {
       <div class="mt-8">
         <div class="flex justify-between">
           <div class="w-2/3">
-            <AddFile v-if="showUploadComponent" />
+            <AddFile v-if="showUploadComponent" @uploadSuccess="checkUser" />
           </div>
           <div class="">
             <button
