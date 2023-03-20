@@ -32,7 +32,7 @@ DEVISE_JWT_SECRET_KEY: generate using 'rake secret'
 * Private/Public Files.
 * Copy Public Files
 * Create user using rake task.
-`rake user:create`
+`docker-compose run web rake user:create`
 
 ---
 ## To Contribute (Add new Feature, Improve Something )
