@@ -22,4 +22,5 @@ services:
       DB_HOST: pg_database
       DB_PASSWORD: admin
       DB_USER: postgres
+      DEVISE_JWT_SECRET_KEY: 2f23f4618f19f8a8bca223f858979266b3e157b26f6b84794376abf73ac80cad87ca3aa01c5b8f8056e3f21f94e8c17cc4f2d4791461b8ecb6d0d0d4622624e1
     tty: true # for tailwind to watch changes
