@@ -7,7 +7,7 @@ namespace :user do
     puts 'Enter a password: '
     password = $stdin.gets
     unless email.strip!.blank? || password.strip!.blank?
-      user = User.new(email: email, password: password)
+      user = User.new(email: email, password: password, password_confirmation: password)
       if user.save
         puts 'User was created successfully.'
       else

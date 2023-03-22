@@ -1,28 +1,21 @@
 class Api::V1::UsersController < ApplicationController
   skip_forgery_protection
   before_action { ActiveStorage::Current.url_options = { host: request.base_url } }
+  before_action :authenticate_user!
 
   def check_user
-    if user_signed_in?
-      render json: { message: 'User Already logged in', email: current_user.email }
-    else
-      render json: { message: 'User not signed in' }, status: :unauthorized
-    end
+    render json: { message: 'User Already logged in', email: current_user.email }
   end
 
   def add_files
-    current_user.file_lists.create(parsed_params)
+    current_user.file_lists.create!(parsed_params)
     render json: { message: 'Files Has been uploaded Successfully' }, status: :created
   rescue StandardError
     render json: { message: 'An Error Occurred' }, status: :unprocessable_entity
   end
 
   def user_files
-    if user_signed_in?
-      @files = current_user.file_lists
-    else
-      render json: { message: 'User not signed in' }, status: :unauthorized
-    end
+    @files = current_user.file_lists
   end
 
   def delete_file
@@ -40,7 +33,7 @@ class Api::V1::UsersController < ApplicationController
 
   def copy_file
     file_list = FileList.find(params[:id])
-    f = current_user.file_lists.create(file_list.attributes.reject { |k, _v| k.to_s == 'id' })
+    f = current_user.file_lists.create!(file_list.attributes.reject { |k, _v| k.to_s == 'id' })
     f.file.attach(
       {
         io: StringIO.new(file_list.file.blob.download),

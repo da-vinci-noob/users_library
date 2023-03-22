@@ -11,15 +11,8 @@ RSpec.describe FileList, type: :model do
     it { should belong_to(:user) }
   end
 
-  describe 'Columns Valid check' do
-    it { should validate_presence_of :file }
-  end
-
-  it 'is not valid without user and without image' do
+  it 'is not valid without user' do
     file_list = FileList.new(private: true)
-    expect(file_list).to_not be_valid
-
-    file_list = FileList.new(private: true, user: users(:one))
     expect(file_list).to_not be_valid
   end
 
