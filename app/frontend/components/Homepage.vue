@@ -174,7 +174,7 @@ const logoutUser = () => {
           <div class="w-2/3">
             <AddFile v-if="showUploadComponent" @uploadSuccess="checkUser" />
           </div>
-          <div class="">
+          <div class="whitespace-nowrap">
             <button
               @click="showUploadComponent = !showUploadComponent"
               class="px-6 py-3 text-sm font-medium leading-none text-white bg-indigo-700 rounded whitespace-nowrap focus:ring-2 sm:ml-3 hover:bg-indigo-600"
