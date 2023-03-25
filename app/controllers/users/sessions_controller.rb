@@ -1,6 +1,12 @@
 class Users::SessionsController < Devise::SessionsController
   skip_forgery_protection
   respond_to :json
+  skip_before_action :verify_signed_out_user, only: :destroy
+
+  def destroy
+    signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
+    signed_out ? log_out_success : log_out_failure
+  end
 
   private
 
@@ -10,12 +16,6 @@ class Users::SessionsController < Devise::SessionsController
     else
       render json: { message: 'You are not logged in.' }, status: :not_found
     end
-  end
-
-  def respond_to_on_destroy
-    log_out_success && return if current_user
-
-    log_out_failure
   end
 
   def log_out_success
